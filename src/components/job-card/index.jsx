@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,9 +8,38 @@ import {
   Avatar,
   Grid,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 
 const JobCard = ({ data, theme }) => {
+    const [modalOpen, setModalOpen] = useState(false);
+    
+    const handleCloseModal = () => {
+      setModalOpen(false);
+    };
+  
+    const handleCardClick = () => {
+      setModalOpen(true);
+    };
+  
+    const getJobDetails = () => {
+        const words = data.jobDetailsFromCompany.split(" ");
+        const visibleWords = words.slice(0, 101).join(" ");
+        const blurredWords = (
+          <span style={{ filter: 'blur(.1rem)' }}>
+            {words.slice(101, 120).join(" ")}
+          </span>
+        );
+        return (
+            <>
+              {visibleWords}&nbsp;
+              {blurredWords}
+            </>
+          );
+    };
   return (
     <Card
     sx={{
@@ -91,24 +120,33 @@ const JobCard = ({ data, theme }) => {
           <strong>About us</strong>
           
         </Typography>
-        <Typography variant="title" sm={{fontSize:"14px"}}>
-          {data.jobDetailsFromCompany}
-        
-          <a href="#" >
-            View Job
-          </a>
-        </Typography>
-        {data.minExp !== null && (
-          <><Typography variant="subtitle2" >
-          Minimum Experience
-         </Typography>
-        <Typography variant="description2">{data.minExp} Years</Typography></>
+       
+          <Typography variant="title" sm={{ fontSize: "14px" }}>
+          {getJobDetails()}
+         
+            <Button sx={{ color: theme.palette.link.main }}  onClick={handleCardClick}>
+              View job
+            </Button>
           
-        )}
+        </Typography>
+        {data.minExp !== null ? (
+            <>
+                <Typography variant="subtitle2">Minimum Experience</Typography>
+                <Typography variant="description2">{data.minExp} Years</Typography>
+            </>
+            ) : (
+            <>
+                <Typography variant="subtitle2">Minimum Experience</Typography>
+                <Typography variant="description2">Fresher</Typography>
+            </>
+            )}
       </CardContent>
 
       <CardActions>
-          <Button variant="contained" color="primary" sx={{ backgroundColor: "rgb(85, 239, 196)", color: "rgb(0, 0, 0)" }}>
+          <Button variant="contained" sx={{ backgroundColor: "rgb(85, 239, 196)", 
+          color: "rgb(0, 0, 0)",
+         
+           }}>
             ⚡ Easy Apply
           </Button>
           <Button variant="contained"  color="secondary"
@@ -117,7 +155,9 @@ const JobCard = ({ data, theme }) => {
               borderBottomLeftRadius: "8px",
               borderBottomRightRadius: "8px",
               marginTop:"10px",
-              marginLeft:"0px !important"
+              marginLeft:"0px !important",
+              fontSize:"14px",
+              fontWeight:"400",
             }} 
             >
             <Avatar src="https://weekday-logos-and-images.s3.eu-north-1.amazonaws.com/Mask+Group.png" />
@@ -127,6 +167,15 @@ const JobCard = ({ data, theme }) => {
             </Typography>
           </Button>
         </CardActions>
+        <Dialog open={modalOpen} onClose={handleCloseModal}>
+        <DialogTitle>Job Details</DialogTitle>
+        <DialogContent>
+          <Typography>{data.jobDetailsFromCompany}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };

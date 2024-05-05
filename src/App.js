@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Typography,
   Grid,
@@ -8,12 +8,18 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import JobCard from "./components/job-card/index";
+import FilterDropdown from "./components/filter/index";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [fetching, setFetching] = useState(false);
   
-  
+
+  const observer = useRef();
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -21,7 +27,7 @@ const App = () => {
         myHeaders.append("Content-Type", "application/json");
         const body = JSON.stringify({
           limit: 10,
-          offset: 0,
+          offset: (page - 1) * 10,
         });
         const requestOptions = {
           method: "POST",
@@ -34,21 +40,52 @@ const App = () => {
         );
         const data = await response.json();
         console.log(data);
-       
+        if (page === 1) {
           setJobs(data.jdList);
-        
+          setFilteredData(data.jdList);
+        } else {
+          setJobs((prevJobs) => [...prevJobs, ...data.jdList]);
+          setFilteredData((prevData) => [...prevData, ...data.jdList]);
+        }
         setLoading(false);
+        setFetching(false);
       } catch (error) {
         console.error(error);
         setLoading(false);
+        setFetching(false);
       }
     };
     fetchJobs();
+  }, [page]);
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1,
+    };
+
+    observer.current = new IntersectionObserver(handleObserver, options);
   }, []);
 
- 
+  useEffect(() => {
+    if (!fetching) {
+      observer.current.observe(document.getElementById("observer"));
+    }
+  }, [fetching]);
 
- 
+  const handleObserver = (entities) => {
+    const target = entities[0];
+    if (target.isIntersecting) {
+      setFetching(true);
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handleFilter = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   const theme = createTheme({
     palette: {
       primary: {
@@ -132,6 +169,8 @@ const App = () => {
             fontWeight: 500,
             fontSize: "16px",
             borderRadius:"8px",
+            textTransform: "capitalize", 
+           
           },
           containedSecondary: {
             color: "#fff",
@@ -146,10 +185,62 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Container maxWidth="lg">
         <Typography variant="h4" align="center" style={{ marginTop: "50px" }}>
-          Job Search
+         Search Job 
         </Typography>
 
-        
+        <Grid container spacing={2} style={{ marginTop: "20px" }}>
+       
+          <Grid item xs={12} sm={2}>
+            <FilterDropdown
+              data={jobs}
+              label="Roles"
+              property="jobRole"
+              handleFilter={handleFilter}
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <FilterDropdown
+              data={jobs}
+              label="Experience"
+              property="minExp"
+              handleFilter={handleFilter}
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <FilterDropdown
+              data={jobs}
+              label="Base pay"
+              property="minJdSalary"
+              handleFilter={handleFilter}
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <FilterDropdown
+              data={jobs}
+              label="Location"
+              property="location"
+              handleFilter={handleFilter}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={2}>
+            <FilterDropdown
+              data={jobs}
+              label="Remote"
+              property="location"
+              handleFilter={handleFilter}
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <FilterDropdown
+              data={jobs}
+              label="Comapny name"
+              property="companyName"
+              handleFilter={handleFilter}
+            />
+          </Grid>
+        </Grid>
+
         {loading ? (
           <div
             style={{
@@ -162,7 +253,7 @@ const App = () => {
           </div>
         ) : (
           <Grid container spacing={2} style={{ marginTop: "20px" }}>
-            {jobs.map((item, index) => (
+            {filteredData.map((item, index) => (
               <Grid item xs={12} sm={4} key={index}>
                 <JobCard data={item}  theme={theme}/>
               </Grid>
@@ -170,10 +261,23 @@ const App = () => {
           </Grid>
         )}
 
-      
+        {fetching && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
+            }}
+          >
+            {/* <CircularProgress /> */}
+          </div>
+        )}
+        <div id="observer"></div>
       </Container>
     </ThemeProvider>
   );
 };
 
 export default App;
+
+
