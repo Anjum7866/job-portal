@@ -1,104 +1,178 @@
-import React, { useEffect, useState } from 'react';
-import { Paper, Typography, Card, CardContent, Button, Avatar, CardActions, Chip, Grid, Container } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Typography,
+  Grid,
+  Container,
+  CircularProgress,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
+import JobCard from "./components/job-card/index";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
-  
   const [jobs, setJobs] = useState([]);
- 
+  
+  
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         const body = JSON.stringify({
-          "limit": 10,
-          "offset": 0
+          limit: 10,
+          offset: 0,
         });
         const requestOptions = {
           method: "POST",
           headers: myHeaders,
-          body
+          body,
         };
-        const response = await fetch("https://api.weekday.technology/adhoc/getSampleJdJSON", requestOptions);
+        const response = await fetch(
+          "https://api.weekday.technology/adhoc/getSampleJdJSON",
+          requestOptions
+        );
         const data = await response.json();
         console.log(data);
+       
           setJobs(data.jdList);
-         
         
+        setLoading(false);
       } catch (error) {
         console.error(error);
         setLoading(false);
-        
       }
     };
     fetchJobs();
   }, []);
 
+ 
+
+ 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#54EFC3",
+      },
+      secondary:{
+        main:"#8b8b8b",
+      },
+      text: {
+        primary: "rgba(0, 0, 0, 0.87)",
+      },
+      grey: {
+        "100": "rgb(230, 230, 230)"
+      },
+      link: {
+        main: "#4943da",
+      },
+
+    },
+    components: {
+      MuiChip: {
+        styleOverrides: {
+          sizeSmall: {
+            fontSize: "9px",
+          },
+          outlined: {
+            borderColor: "rgb(230, 230, 230)"
+          },
+          root:{
+            padding:"5px 0px",
+          }
+        },
+      },
+      MuiTypography: {
+        styleOverrides: {
+          h6: {
+            fontSize: "13px",
+            fontWeight: 600,
+            letterSpacing: "1px",
+            marginBottom: "3px",
+            color: "#8b8b8b",
+          },
+          body1: {
+            flex: "1", // Allow the text to take remaining space
+          },
+          title: {
+            fontSize: "14px",
+            "& a": {
+              display: "block",
+              textAlign: "center",
+              color: "#4943da",
+              textDecoration: "none",
+            },
+          },
+          subtitle2: {
+            fontSize: "13px",
+            fontWeight: 600,
+            letterSpacing: "1px",
+            marginBottom: "3px",
+            color: "#8b8b8b",
+            marginTop:"10px"
+          },
+          description2: {
+            fontSize: "14px",
+            fontWeight: 400,
+            color: "#000", // Adjust the color as needed
+          },
+        },
+      },
+      MuiCardActions: {
+        styleOverrides: {
+          root: {
+            display: "block",
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            width: "100%",
+            fontWeight: 500,
+            fontSize: "16px",
+            borderRadius:"8px",
+          },
+          containedSecondary: {
+            color: "#fff",
+          },
+        },
+      },
+      
+    },
+  });
+
   return (
-    <Container maxWidth="lg">
-    <Typography variant='h4' align="center" style={{ marginTop: "50px" }}>Job Search</Typography>
-    <Grid container spacing={2} style={{ marginTop: "20px" }}>
-      {jobs.map((item) => (
-         <Card sx={{ maxWidth: 345, height: '100%', borderRadius: "25px", marginTop: "10px" }}>
-       
-       <CardContent>
-       <Chip label={`⏳ Posted 10 days ago`} variant="outlined" />
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={2}>
-            <Avatar src={item.logoUrl} alt="logo" variant="rounded" sx={{ width: 30, height: 50 }} />
-          </Grid>
-          <Grid item xs={10}>
-            <Typography gutterBottom variant="h6">
-              {item.companyName}
-            </Typography>
-            <Typography variant="subtitle1" className="cards-sub-text">{item.jobRole} </Typography>
-            <Typography variant="body2" color="text.secondary" className="card-salary">
-              {item.location}
-              </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardContent>
-  <Typography variant="subtitle1" className="cards-sub-text">
-    Estimated Salary:
-    {item.minJdSalary && <>{item.salaryCurrencyCode === 'USD' ? ' $' : ' ₹'}{item.minJdSalary}</>}
-    {item.minJdSalary && item.maxJdSalary && <> - </>}
-    {item.maxJdSalary && <>{item.salaryCurrencyCode === 'USD' ? ' $' : ' ₹'}{item.maxJdSalary}LPA</>}
-    {item.maxJdSalary && <>✅</>}
-  </Typography>  
-  <Typography variant="body1" className="cards-sub-text" style={{ fontSize: '1rem', lineHeight: '1.5', fontWeight: 500 }}>About Company:</Typography>
-  <Typography variant="body2">
-    <b>About us</b><br />
-    {item.jobDetailsFromCompany}<br />
-   
-    <a href="#" style={{ color: 'blue' }}>View Job</a>
-  </Typography>
-  {item.minExp !== null && (
-    <Typography variant="subtitle2" style={{ marginTop: '10px' }}>
-      Minimum Experience<br />
-      {item.minExp} years
-    </Typography>
-  )}
-</CardContent>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="lg">
+        <Typography variant="h4" align="center" style={{ marginTop: "50px" }}>
+          Job Search
+        </Typography>
 
-      <CardActions style={{ display: 'block' }}>
-        <Button variant="contained" color="primary" style={{ width: '100%', backgroundColor: 'rgb(85, 239, 196)', color: 'rgb(0, 0, 0)', fontWeight: 500, padding: '8px 18px' }}>
-          ⚡ Easy Apply
-        </Button>
-        <Button variant="contained" color="primary" style={{ backgroundColor: 'rgb(73, 67, 218)', fontWeight: 500, marginTop: '20px' }}>
-          <div style={{ display: 'flex' }}>
-            <Avatar src="https://weekday-logos-and-images.s3.eu-north-1.amazonaws.com/Mask+Group.png" />
-            <Avatar src="https://weekday-logos-and-images.s3.eu-north-1.amazonaws.com/Mask+Group(1).png" />
-            <Typography variant="body1" className="MuiTypography-root MuiTypography-body1 css-13uo6gx">Unlock referral asks</Typography>
+        
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "50px",
+            }}
+          >
+            <CircularProgress />
           </div>
-        </Button>
-      </CardActions>
-    </Card>
-      ))}
-    </Grid>
-    </Container>
+        ) : (
+          <Grid container spacing={2} style={{ marginTop: "20px" }}>
+            {jobs.map((item, index) => (
+              <Grid item xs={12} sm={4} key={index}>
+                <JobCard data={item}  theme={theme}/>
+              </Grid>
+            ))}
+          </Grid>
+        )}
 
+      
+      </Container>
+    </ThemeProvider>
   );
 };
 
