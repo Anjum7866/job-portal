@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+# Job Portal Project README
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the Candidate Application Platform! This platform allows users to view job listings, filter jobs based on various criteria, and seamlessly browse through job opportunities. Please note that for the scope of this assignment, only the "Search jobs" section has been implemented.
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+The Candidate Application Platform is a web application designed to streamline the job search process. Users can easily search for job listings, filter them based on their preferences, and apply to relevant positions. The platform features a user-friendly interface, responsive design, and infinite scroll functionality for a seamless browsing experience.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+### Job Cards
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Each job listing is displayed as a card containing the following information:
+- Job title
+- Company name
+- Location
+- Job description (limited to a certain number of characters with an option to view job with modal popup)
+- Experience required
+- View job button/link
 
-### `npm run build`
+### Filters
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Filters are available to refine job listings based on the following criteria:
+- Minimum experience
+- Company name
+- Location
+- Remote/on-site
+- Role
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Infinite Scroll
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Infinite scroll has been implemented to load additional job listings as the user scrolls down the page. The platform fetches and displays more jobs automatically without requiring the user to click on a "Load More" button.
 
-### `npm run eject`
+### Responsive Design
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The platform is responsive and works well on different screen sizes, including mobile devices.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Technologies Used
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- React
+- Material-UI
 
-## Learn More
+To run this project locally, follow these steps:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Clone the repository to your local machine:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    ```bash
+    git clone https://github.com/Anjum7866/job-portal.git
+    ```
 
-### Code Splitting
+2. Navigate to the project directory:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+    ```bash
+    cd job-portal
+    ```
 
-### Analyzing the Bundle Size
+3. Install dependencies:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    ```bash
+    npm install
+    ```
 
-### Making a Progressive Web App
+4. Start the development server:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+    ```bash
+    npm start
+    ```
 
-### Advanced Configuration
+5. Open your web browser and navigate to [http://localhost:3000](http://localhost:3000) to view the application.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
